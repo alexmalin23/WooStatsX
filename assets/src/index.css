@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles for WP admin integration */
+#woostatsx-dashboard {
+  margin: 10px 20px 0 2px;
+}
+
+.woostatsx-app {
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  max-width: 100%;
+}
+
+/* Fix some WP admin conflicts */
+.woostatsx-app *,
+.woostatsx-app *::before,
+.woostatsx-app *::after {
+  box-sizing: border-box;
+}
+
+/* Dashboard tabs */
+.woostatsx-tab-active {
+  @apply text-wp-primary border-wp-primary font-medium;
+}
+
+/* Dashboard cards */
+.woostatsx-card {
+  @apply bg-white rounded-md shadow p-4 flex flex-col h-full;
+}
+
+.woostatsx-card-header {
+  @apply text-gray-500 text-sm font-medium mb-2;
+}
+
+.woostatsx-card-value {
+  @apply text-2xl font-bold;
+}
+
+.woostatsx-card-footer {
+  @apply text-xs text-gray-500 mt-auto pt-2;
+} 

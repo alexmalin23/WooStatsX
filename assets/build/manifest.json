@@ -1,0 +1,14 @@
+{
+  "assets/src/index.css": {
+    "file": "index.css",
+    "src": "assets/src/index.css"
+  },
+  "assets/src/index.tsx": {
+    "css": [
+      "index.css"
+    ],
+    "file": "index.js",
+    "isEntry": true,
+    "src": "assets/src/index.tsx"
+  }
+}
