@@ -106,6 +106,7 @@ class WooStatsX {
         wp_localize_script('woostatsx-script', 'wooStatsx', [
             'apiUrl' => esc_url_raw(rest_url('woostatsx/v1')),
             'nonce' => wp_create_nonce('wp_rest'),
+            'locale' => get_locale(),
         ]);
     }
 

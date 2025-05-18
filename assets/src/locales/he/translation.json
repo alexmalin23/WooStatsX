@@ -1,0 +1,43 @@
+{
+  "dashboard": {
+    "title": "לוח בקרה",
+    "summary": "סיכום",
+    "totalSales": "סך המכירות",
+    "totalOrders": "סך ההזמנות",
+    "averageOrder": "הזמנה ממוצעת",
+    "period": "תקופה"
+  },
+  "products": {
+    "title": "מוצרים",
+    "topProducts": "מוצרים מובילים",
+    "productName": "שם המוצר",
+    "totalSold": "סך הנמכר",
+    "revenue": "הכנסה"
+  },
+  "customers": {
+    "title": "לקוחות",
+    "newCustomers": "לקוחות חדשים",
+    "returningCustomers": "לקוחות חוזרים",
+    "customerName": "שם הלקוח",
+    "orderCount": "מספר הזמנות",
+    "totalSpent": "סך ההוצאה"
+  },
+  "advanced": {
+    "title": "מתקדם",
+    "salesByDay": "מכירות לפי יום",
+    "salesByCategory": "מכירות לפי קטגוריה",
+    "salesByCountry": "מכירות לפי מדינה"
+  },
+  "common": {
+    "loading": "טוען...",
+    "error": "שגיאה בטעינת נתונים",
+    "noData": "אין נתונים זמינים",
+    "today": "היום",
+    "yesterday": "אתמול",
+    "last7Days": "7 ימים אחרונים",
+    "last30Days": "30 ימים אחרונים",
+    "thisMonth": "החודש הנוכחי",
+    "lastMonth": "החודש הקודם",
+    "custom": "מותאם אישית"
+  }
+} 

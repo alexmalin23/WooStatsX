@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from '../hooks/useTranslation';
 
 type Tab = 'overview' | 'products' | 'customers' | 'sales-days' | 'advanced';
 
@@ -8,16 +9,18 @@ interface TabsProps {
 }
 
 const Tabs: React.FC<TabsProps> = ({ activeTab, onTabChange }) => {
+  const { t, dir } = useTranslation();
+
   const tabs = [
-    { id: 'overview', label: 'Overview' },
-    { id: 'products', label: 'Products' },
-    { id: 'customers', label: 'Customers' },
-    { id: 'sales-days', label: 'Sales Days' },
-    { id: 'advanced', label: 'Advanced' },
+    { id: 'overview', label: t('dashboard.title') },
+    { id: 'products', label: t('products.title') },
+    { id: 'customers', label: t('customers.title') },
+    { id: 'sales-days', label: t('advanced.salesByDay') },
+    { id: 'advanced', label: t('advanced.title') },
   ] as const;
 
   return (
-    <div className="border-b border-gray-200">
+    <div className="border-b border-gray-200" dir={dir}>
       <nav className="-mb-px flex space-x-8">
         {tabs.map((tab) => (
           <button

@@ -1,0 +1,43 @@
+{
+  "dashboard": {
+    "title": "Dashboard",
+    "summary": "Summary",
+    "totalSales": "Total Sales",
+    "totalOrders": "Total Orders",
+    "averageOrder": "Average Order",
+    "period": "Period"
+  },
+  "products": {
+    "title": "Products",
+    "topProducts": "Top Products",
+    "productName": "Product Name",
+    "totalSold": "Total Sold",
+    "revenue": "Revenue"
+  },
+  "customers": {
+    "title": "Customers",
+    "newCustomers": "New Customers",
+    "returningCustomers": "Returning Customers",
+    "customerName": "Customer Name",
+    "orderCount": "Order Count",
+    "totalSpent": "Total Spent"
+  },
+  "advanced": {
+    "title": "Advanced",
+    "salesByDay": "Sales by Day",
+    "salesByCategory": "Sales by Category",
+    "salesByCountry": "Sales by Country"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error loading data",
+    "noData": "No data available",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "last7Days": "Last 7 Days",
+    "last30Days": "Last 30 Days",
+    "thisMonth": "This Month",
+    "lastMonth": "Last Month",
+    "custom": "Custom"
+  }
+} 

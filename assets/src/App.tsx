@@ -9,22 +9,26 @@ import SalesDays from './components/SalesDays';
 import Advanced from './components/Advanced';
 import { formatDate } from './utils/dateUtils';
 import { testApiConnection } from './utils/api';
+import { useTranslation } from './hooks/useTranslation';
 
 type Tab = 'overview' | 'products' | 'customers' | 'sales-days' | 'advanced';
 
 // Define time period options
 type TimePeriod = 'today' | '7days' | '14days' | '30days' | '12months' | 'custom';
 
-const TIME_PERIODS: { value: TimePeriod; label: string }[] = [
-  { value: 'today', label: 'היום' },
-  { value: '7days', label: '7 ימים' },
-  { value: '14days', label: '14 ימים' },
-  { value: '30days', label: '30 ימים' },
-  { value: '12months', label: '12 חודשים' },
-  { value: 'custom', label: 'מותאם אישית' },
-];
-
 const App: React.FC = () => {
+  const { t, dir } = useTranslation();
+  
+  // Define time periods with translations
+  const TIME_PERIODS: { value: TimePeriod; label: string }[] = [
+    { value: 'today', label: t('common.today') },
+    { value: '7days', label: t('common.last7Days') },
+    { value: '14days', label: '14 ' + t('common.last7Days').split(' ')[0] },
+    { value: '30days', label: t('common.last30Days') },
+    { value: '12months', label: '12 ' + t('common.lastMonth').split(' ')[0] },
+    { value: 'custom', label: t('common.custom') },
+  ];
+
   const [activeTab, setActiveTab] = useState<Tab>('overview');
   
   // Get current date and ensure we're using the proper date
@@ -137,16 +141,16 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="woostatsx-app p-4">
+    <div className="woostatsx-app p-4" dir={dir}>
       {apiConnected === false && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          <p className="font-bold">API Connection Error</p>
-          <p>Could not connect to the WordPress REST API. Please check your server configuration.</p>
+          <p className="font-bold">{t('common.error')}</p>
+          <p>{t('common.error')}</p>
         </div>
       )}
       
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">WooStatsX Dashboard</h1>
+        <h1 className="text-2xl font-bold">WooStatsX {t('dashboard.title')}</h1>
         
         <div className="flex gap-4">
           <div className="flex flex-col gap-2">
@@ -186,7 +190,7 @@ const App: React.FC = () => {
             onClick={refreshData}
             className="bg-wp-primary hover:bg-wp-secondary text-white px-4 py-2 rounded text-sm"
           >
-            Refresh Data
+            {t('common.loading').replace('...', '')}
           </button>
         </div>
       </div>
