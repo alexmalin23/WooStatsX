@@ -19,6 +19,7 @@ import { fetchStats, fetchRevenueTrend, fetchTopProducts, fetchBestSalesDays } f
 import { formatCurrency, formatNumber, getDateRangeLabel } from '../utils/dateUtils';
 import type { DateRange, Product, SalesDay } from '../utils/api';
 import { useTranslation } from '../hooks/useTranslation';
+import LoadingSpinner from './LoadingSpinner';
 
 // Register ChartJS components
 ChartJS.register(
@@ -80,11 +81,8 @@ const Dashboard: React.FC<DashboardProps> = ({ dateRange }) => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center p-12 bg-white rounded-lg shadow">
-        <div className="text-center">
-          <div className="inline-block w-8 h-8 border-4 border-t-wp-primary border-r-gray-200 border-b-gray-200 border-l-gray-200 rounded-full animate-spin mb-4"></div>
-          <p className="text-gray-600">{t('common.loading')}</p>
-        </div>
+      <div className="bg-white rounded-lg shadow">
+        <LoadingSpinner type="pulse" size="medium" fullContainer text={t('common.loading')} />
       </div>
     );
   }
@@ -379,15 +377,6 @@ const Dashboard: React.FC<DashboardProps> = ({ dateRange }) => {
             </ul>
           </div>
         </div>
-      </div>
-      
-      {/* Debug info in development */}
-      <div className="mt-4 p-4 border border-gray-200 bg-gray-50 text-xs font-mono rounded">
-        <p>Debug Info:</p>
-        <p>Date Range: {JSON.stringify(dateRange)}</p>
-        <p>API URL: {window.wooStatsx?.apiUrl || '/wp-json/woostatsx/v1'}</p>
-        <p className="mt-2">Stats Response:</p>
-        <pre className="overflow-auto max-h-40">{JSON.stringify(stats, null, 2)}</pre>
       </div>
     </div>
   );

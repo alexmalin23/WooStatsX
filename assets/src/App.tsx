@@ -1,138 +1,58 @@
 import React, { useState, useEffect } from 'react';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import Dashboard from './components/Dashboard';
 import Tabs from './components/Tabs';
 import Products from './components/Products';
 import Customers from './components/Customers';
 import SalesDays from './components/SalesDays';
 import Advanced from './components/Advanced';
-import { formatDate } from './utils/dateUtils';
+import DateRangePicker from './components/DateRangePicker';
+import LoadingSpinner from './components/LoadingSpinner';
+import { formatDate, getPresetDateRanges } from './utils/dateUtils';
 import { testApiConnection } from './utils/api';
 import { useTranslation } from './hooks/useTranslation';
+import type { DateRange as ApiDateRange } from './utils/api';
 
 type Tab = 'overview' | 'products' | 'customers' | 'sales-days' | 'advanced';
-
-// Define time period options
-type TimePeriod = 'today' | '7days' | '14days' | '30days' | '12months' | 'custom';
 
 const App: React.FC = () => {
   const { t, dir } = useTranslation();
   
-  // Define time periods with translations
-  const TIME_PERIODS: { value: TimePeriod; label: string }[] = [
-    { value: 'today', label: t('common.today') },
-    { value: '7days', label: t('common.last7Days') },
-    { value: '14days', label: '14 ' + t('common.last7Days').split(' ')[0] },
-    { value: '30days', label: t('common.last30Days') },
-    { value: '12months', label: '12 ' + t('common.lastMonth').split(' ')[0] },
-    { value: 'custom', label: t('common.custom') },
-  ];
-
   const [activeTab, setActiveTab] = useState<Tab>('overview');
-  
-  // Get current date and ensure we're using the proper date
-  const today = new Date();
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(today.getDate() - 30);
-  
-  const [dateRange, setDateRange] = useState<{
-    startDate: Date;
-    endDate: Date;
-  }>({
-    startDate: thirtyDaysAgo,
-    endDate: today,
-  });
-  
-  const [selectedPeriod, setSelectedPeriod] = useState<TimePeriod>('30days');
   const [apiConnected, setApiConnected] = useState<boolean | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  // Setup date range
+  const [dateRange, setDateRange] = useState<ApiDateRange>(
+    getPresetDateRanges().last30Days
+  );
 
   // Check API connectivity on load
   useEffect(() => {
     const checkApiConnection = async () => {
       try {
+        setIsLoading(true);
         const isConnected = await testApiConnection();
         setApiConnected(isConnected);
         console.log('API connection status:', isConnected);
         console.log('API base URL:', window.wooStatsx?.apiUrl);
-        console.log('Date Range:', formatDate(dateRange.startDate), 'to', formatDate(dateRange.endDate));
-        console.log('API nonce:', window.wooStatsx?.nonce ? 'Present' : 'Missing');
+        console.log('Date Range:', dateRange.from, 'to', dateRange.to);
       } catch (error) {
         console.error('API connection check failed:', error);
         setApiConnected(false);
+      } finally {
+        setIsLoading(false);
       }
     };
     
     checkApiConnection();
   }, []);
 
-  // Update date range when period changes
-  useEffect(() => {
-    const now = new Date();
-    let startDate = new Date();
-    
-    switch (selectedPeriod) {
-      case 'today':
-        // Set to start of today
-        startDate.setHours(0, 0, 0, 0);
-        break;
-      case '7days':
-        startDate.setDate(now.getDate() - 7);
-        break;
-      case '14days':
-        startDate.setDate(now.getDate() - 14);
-        break;
-      case '30days':
-        startDate.setDate(now.getDate() - 30);
-        break;
-      case '12months':
-        startDate.setMonth(now.getMonth() - 12);
-        break;
-      case 'custom':
-        // Don't change dates for custom selection
-        return;
-    }
-    
-    setDateRange({
-      startDate,
-      endDate: now,
-    });
-  }, [selectedPeriod]);
-
   const handleTabChange = (tab: Tab) => {
     setActiveTab(tab);
   };
 
-  const handleDateChange = (update: [Date | null, Date | null]) => {
-    // Extract values and handle nulls properly
-    const [start, end] = update;
-    
-    // Only update if we have both dates
-    if (start && end) {
-      console.log('New date range selected:', formatDate(start), 'to', formatDate(end));
-      setDateRange({
-        startDate: start,
-        endDate: end,
-      });
-      // Set to custom period when user manually selects dates
-      setSelectedPeriod('custom');
-    } else if (start) {
-      // If only start date is selected, update just that
-      setDateRange(prev => ({
-        ...prev,
-        startDate: start,
-      }));
-    }
-  };
-
-  const handlePeriodChange = (period: TimePeriod) => {
-    setSelectedPeriod(period);
-  };
-
-  const apiParams = {
-    from: formatDate(dateRange.startDate),
-    to: formatDate(dateRange.endDate),
-    all_time: false, // Changed from true to false to respect date filters
+  const handleDateRangeChange = (newDateRange: ApiDateRange) => {
+    setDateRange(newDateRange);
   };
 
   const refreshData = () => {
@@ -140,77 +60,82 @@ const App: React.FC = () => {
     window.location.reload();
   };
 
+  // Get date range presets with translations
+  const dateRangePresets = [
+    { label: t('common.today'), value: 'today', range: getPresetDateRanges().today },
+    { label: t('common.yesterday'), value: 'yesterday', range: getPresetDateRanges().yesterday },
+    { label: t('common.last7Days'), value: 'last7Days', range: getPresetDateRanges().last7Days },
+    { label: t('common.last30Days'), value: 'last30Days', range: getPresetDateRanges().last30Days },
+    { label: t('common.lastMonth'), value: 'lastMonth', range: getPresetDateRanges().lastMonth },
+    { label: t('common.lastHalfYear'), value: 'lastHalfYear', range: getPresetDateRanges().lastHalfYear },
+    { label: t('common.lastYear'), value: 'lastYear', range: getPresetDateRanges().lastYear },
+  ];
+
+  if (isLoading) {
+    return <LoadingSpinner type="pulse" size="large" fullContainer />;
+  }
+
   return (
-    <div className="woostatsx-app p-4" dir={dir}>
+    <div className="woostatsx-app p-6 max-w-7xl mx-auto bg-gray-50 rounded-lg shadow-sm" dir={dir}>
       {apiConnected === false && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          <p className="font-bold">{t('common.error')}</p>
-          <p>{t('common.error')}</p>
+        <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded mb-6">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <p className="font-medium">{t('common.error')}</p>
+              <p className="mt-1">{t('common.error')}</p>
+            </div>
+          </div>
         </div>
       )}
       
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">WooStatsX {t('dashboard.title')}</h1>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+        <h1 className="text-2xl font-bold text-gray-800">
+          <span className="text-wp-primary">WooStatsX</span> {t('dashboard.title')}
+        </h1>
         
-        <div className="flex gap-4">
-          <div className="flex flex-col gap-2">
-            <div className="flex flex-wrap gap-2">
-              {TIME_PERIODS.map(period => (
-                <button
-                  key={period.value}
-                  onClick={() => handlePeriodChange(period.value)}
-                  className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
-                    selectedPeriod === period.value
-                      ? 'bg-wp-primary text-white'
-                      : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-                  }`}
-                >
-                  {period.label}
-                </button>
-              ))}
-            </div>
-            
-            {selectedPeriod === 'custom' && (
-              <div className="mt-2">
-                <DatePicker
-                  selectsRange={true}
-                  startDate={dateRange.startDate}
-                  endDate={dateRange.endDate}
-                  onChange={handleDateChange}
-                  className="border border-gray-300 rounded px-3 py-2 text-sm"
-                  dateFormat="yyyy-MM-dd"
-                  maxDate={today}
-                  isClearable={false}
-                />
-              </div>
-            )}
-          </div>
+        <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+          <DateRangePicker
+            dateRange={dateRange}
+            onDateRangeChange={handleDateRangeChange}
+            presets={dateRangePresets}
+          />
           
           <button
             onClick={refreshData}
-            className="bg-wp-primary hover:bg-wp-secondary text-white px-4 py-2 rounded text-sm"
+            className="bg-wp-primary hover:bg-wp-secondary text-white px-4 py-2 rounded-md text-sm transition-colors flex items-center justify-center"
           >
-            {t('common.loading').replace('...', '')}
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            {t('common.refresh') || 'Refresh'}
           </button>
         </div>
       </div>
       
-      <Tabs activeTab={activeTab} onTabChange={handleTabChange} />
-      
-      <div className="mt-6">
-        {activeTab === 'overview' && <Dashboard dateRange={apiParams} />}
-        {activeTab === 'products' && <Products dateRange={apiParams} />}
-        {activeTab === 'customers' && <Customers dateRange={apiParams} />}
-        {activeTab === 'sales-days' && <SalesDays dateRange={apiParams} />}
-        {activeTab === 'advanced' && <Advanced dateRange={apiParams} />}
+      <div className="mb-6 bg-white rounded-lg shadow-sm">
+        <Tabs activeTab={activeTab} onTabChange={handleTabChange} />
       </div>
       
-      <div className="mt-4 text-xs text-gray-500">
-        <p>Debug: {apiConnected === null ? 'Checking API...' : apiConnected ? 'API Connected' : 'API Connection Failed'}</p>
-        <p>API URL: {window.wooStatsx?.apiUrl || '/wp-json/woostatsx/v1'}</p>
-        <p>Date Range: {formatDate(dateRange.startDate)} to {formatDate(dateRange.endDate)}</p>
-        <p>Selected Period: {selectedPeriod}</p>
+      <div className="bg-white p-6 rounded-lg shadow-sm">
+        {activeTab === 'overview' && <Dashboard dateRange={dateRange} />}
+        {activeTab === 'products' && <Products dateRange={dateRange} />}
+        {activeTab === 'customers' && <Customers dateRange={dateRange} />}
+        {activeTab === 'sales-days' && <SalesDays dateRange={dateRange} />}
+        {activeTab === 'advanced' && <Advanced dateRange={dateRange} />}
       </div>
+      
+      {/* <div className="mt-6 text-xs text-gray-500 p-4 bg-gray-100 rounded-lg">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+          <p>Status: {apiConnected === null ? 'Checking API...' : apiConnected ? 'API Connected' : 'API Connection Failed'}</p>
+          <p>API: {window.wooStatsx?.apiUrl || '/wp-json/woostatsx/v1'}</p>
+          <p>Date Range: {dateRange.from} to {dateRange.to}</p>
+        </div>
+      </div> */}
     </div>
   );
 };

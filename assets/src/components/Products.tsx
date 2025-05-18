@@ -15,6 +15,7 @@ import { fetchTopProducts } from '../utils/api';
 import { formatCurrency, formatNumber } from '../utils/dateUtils';
 import type { DateRange, Product } from '../utils/api';
 import { useTranslation } from '../hooks/useTranslation';
+import LoadingSpinner from './LoadingSpinner';
 
 // Register ChartJS components
 ChartJS.register(
@@ -40,7 +41,7 @@ const Products: React.FC<ProductsProps> = ({ dateRange }) => {
   );
 
   if (isLoading) {
-    return <div className="text-center p-8">{t('common.loading')}</div>;
+    return <LoadingSpinner type="pulse" size="medium" fullContainer />;
   }
 
   if (error) {

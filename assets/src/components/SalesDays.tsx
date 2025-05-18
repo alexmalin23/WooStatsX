@@ -4,6 +4,7 @@ import { fetchBestSalesDays } from '../utils/api';
 import { formatCurrency, formatNumber } from '../utils/dateUtils';
 import type { DateRange, SalesDay } from '../utils/api';
 import { useTranslation } from '../hooks/useTranslation';
+import LoadingSpinner from './LoadingSpinner';
 
 interface SalesDaysProps {
   dateRange: DateRange;
@@ -19,7 +20,7 @@ const SalesDays: React.FC<SalesDaysProps> = ({ dateRange }) => {
   );
 
   if (isLoading) {
-    return <div className="text-center p-8">{t('common.loading')}</div>;
+    return <LoadingSpinner type="pulse" size="medium" fullContainer />;
   }
 
   if (error) {

@@ -69,6 +69,9 @@
     "last30Days": "30 ימים אחרונים",
     "thisMonth": "חודש זה",
     "lastMonth": "חודש שעבר",
-    "custom": "מותאם אישית"
+    "lastHalfYear": "6 חודשים אחרונים",
+    "lastYear": "שנה אחרונה",
+    "custom": "מותאם אישית",
+    "refresh": "רענן"
   }
 } 
