@@ -3,8 +3,8 @@
  * Plugin Name: WooStatsX
  * Description: Advanced analytics dashboard for WooCommerce
  * Version: 1.0.0
- * Author: WooStatsX
- * Text Domain: woostatsx
+ * Author: Alex Malin
+ * Text Domain: alexmalin23@gmail.com
  * Requires at least: 5.8
  * Requires PHP: 7.4
  * WC requires at least: 5.0
