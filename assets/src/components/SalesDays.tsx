@@ -3,12 +3,15 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchBestSalesDays } from '../utils/api';
 import { formatCurrency, formatNumber } from '../utils/dateUtils';
 import type { DateRange, SalesDay } from '../utils/api';
+import { useTranslation } from '../hooks/useTranslation';
 
 interface SalesDaysProps {
   dateRange: DateRange;
 }
 
 const SalesDays: React.FC<SalesDaysProps> = ({ dateRange }) => {
+  const { t, dir } = useTranslation();
+  
   const { data, isLoading, error } = useQuery(
     ['salesDays', dateRange],
     () => fetchBestSalesDays(dateRange, 20),
@@ -16,13 +19,13 @@ const SalesDays: React.FC<SalesDaysProps> = ({ dateRange }) => {
   );
 
   if (isLoading) {
-    return <div className="text-center p-8">Loading sales days data...</div>;
+    return <div className="text-center p-8">{t('common.loading')}</div>;
   }
 
   if (error) {
     return (
       <div className="bg-red-50 p-4 rounded-md text-red-800">
-        Error loading sales days data. Please try again.
+        {t('common.error')}
       </div>
     );
   }
@@ -37,8 +40,8 @@ const SalesDays: React.FC<SalesDaysProps> = ({ dateRange }) => {
   };
 
   return (
-    <div className="bg-white p-4 rounded-md shadow">
-      <h3 className="text-lg font-medium mb-4">Best Sales Days</h3>
+    <div className="bg-white p-4 rounded-md shadow" dir={dir}>
+      <h3 className="text-lg font-medium mb-4">{t('salesDays.title')}</h3>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="overflow-x-auto">
@@ -46,13 +49,13 @@ const SalesDays: React.FC<SalesDaysProps> = ({ dateRange }) => {
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date
+                  {t('salesDays.date')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Orders
+                  {t('salesDays.orders')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Revenue
+                  {t('salesDays.revenue')}
                 </th>
               </tr>
             </thead>
@@ -75,12 +78,12 @@ const SalesDays: React.FC<SalesDaysProps> = ({ dateRange }) => {
         </div>
         
         <div>
-          <h4 className="text-md font-medium mb-2">Sales Heatmap</h4>
+          <h4 className="text-md font-medium mb-2">{t('salesDays.heatmap')}</h4>
           <div className="grid grid-cols-7 gap-2">
             {/* Day labels */}
             {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
               <div key={day} className="text-xs text-gray-500 text-center">
-                {day}
+                {t(`salesDays.days.${day.toLowerCase()}`)}
               </div>
             ))}
             

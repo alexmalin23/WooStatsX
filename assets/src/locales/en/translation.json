@@ -5,7 +5,9 @@
     "totalSales": "Total Sales",
     "totalOrders": "Total Orders",
     "averageOrder": "Average Order",
-    "period": "Period"
+    "period": "Period",
+    "dailyAverage": "Daily Average",
+    "revenueTrend": "Revenue Trend"
   },
   "products": {
     "title": "Products",
@@ -22,11 +24,40 @@
     "orderCount": "Order Count",
     "totalSpent": "Total Spent"
   },
+  "salesDays": {
+    "title": "Best Sales Days",
+    "date": "Date",
+    "orders": "Orders",
+    "revenue": "Revenue",
+    "heatmap": "Sales Heatmap",
+    "days": {
+      "sun": "Sun",
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat"
+    }
+  },
   "advanced": {
     "title": "Advanced",
     "salesByDay": "Sales by Day",
     "salesByCategory": "Sales by Category",
-    "salesByCountry": "Sales by Country"
+    "salesByCountry": "Sales by Country",
+    "totalRefundAmount": "Total Refund Amount",
+    "refundsProcessed": "{{count}} refunds processed",
+    "topUsedCoupon": "Top Used Coupon",
+    "noCouponsUsed": "No coupons used",
+    "couponUsage": "Used {{count}} times, discount of {{amount}}",
+    "noCouponData": "No coupon data available for this period",
+    "couponsUsed": "Coupons Used",
+    "couponCode": "Coupon Code",
+    "usageCount": "Usage Count",
+    "discountAmount": "Discount Amount",
+    "noCouponsInPeriod": "No coupons were used during this period",
+    "refundAmount": "Refund Amount",
+    "refundsOverTime": "Refunds Over Time"
   },
   "common": {
     "loading": "Loading...",

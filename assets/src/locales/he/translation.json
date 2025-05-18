@@ -2,17 +2,19 @@
   "dashboard": {
     "title": "לוח בקרה",
     "summary": "סיכום",
-    "totalSales": "סך המכירות",
-    "totalOrders": "סך ההזמנות",
-    "averageOrder": "הזמנה ממוצעת",
-    "period": "תקופה"
+    "totalSales": "סך מכירות",
+    "totalOrders": "סך הזמנות",
+    "averageOrder": "ממוצע הזמנה",
+    "period": "תקופה",
+    "dailyAverage": "ממוצע יומי",
+    "revenueTrend": "מגמת הכנסות"
   },
   "products": {
     "title": "מוצרים",
     "topProducts": "מוצרים מובילים",
     "productName": "שם המוצר",
-    "totalSold": "סך הנמכר",
-    "revenue": "הכנסה"
+    "totalSold": "סך נמכר",
+    "revenue": "הכנסות"
   },
   "customers": {
     "title": "לקוחות",
@@ -20,13 +22,42 @@
     "returningCustomers": "לקוחות חוזרים",
     "customerName": "שם הלקוח",
     "orderCount": "מספר הזמנות",
-    "totalSpent": "סך ההוצאה"
+    "totalSpent": "סך הוצאות"
+  },
+  "salesDays": {
+    "title": "ימי מכירה מובילים",
+    "date": "תאריך",
+    "orders": "הזמנות",
+    "revenue": "הכנסות",
+    "heatmap": "מפת חום מכירות",
+    "days": {
+      "sun": "א'",
+      "mon": "ב'",
+      "tue": "ג'",
+      "wed": "ד'",
+      "thu": "ה'",
+      "fri": "ו'",
+      "sat": "ש'"
+    }
   },
   "advanced": {
     "title": "מתקדם",
     "salesByDay": "מכירות לפי יום",
     "salesByCategory": "מכירות לפי קטגוריה",
-    "salesByCountry": "מכירות לפי מדינה"
+    "salesByCountry": "מכירות לפי מדינה",
+    "totalRefundAmount": "סך החזרים",
+    "refundsProcessed": "{{count}} החזרים בוצעו",
+    "topUsedCoupon": "קופון בשימוש מוביל",
+    "noCouponsUsed": "לא נעשה שימוש בקופונים",
+    "couponUsage": "שימוש {{count}} פעמים, הנחה של {{amount}}",
+    "noCouponData": "אין נתוני קופונים זמינים לתקופה זו",
+    "couponsUsed": "קופונים בשימוש",
+    "couponCode": "קוד קופון",
+    "usageCount": "מספר שימושים",
+    "discountAmount": "סכום הנחה",
+    "noCouponsInPeriod": "לא נעשה שימוש בקופונים בתקופה זו",
+    "refundAmount": "סכום החזר",
+    "refundsOverTime": "החזרים לאורך זמן"
   },
   "common": {
     "loading": "טוען...",
@@ -36,8 +67,8 @@
     "yesterday": "אתמול",
     "last7Days": "7 ימים אחרונים",
     "last30Days": "30 ימים אחרונים",
-    "thisMonth": "החודש הנוכחי",
-    "lastMonth": "החודש הקודם",
+    "thisMonth": "חודש זה",
+    "lastMonth": "חודש שעבר",
     "custom": "מותאם אישית"
   }
 } 

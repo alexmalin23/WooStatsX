@@ -3,12 +3,15 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchTopCustomers } from '../utils/api';
 import { formatCurrency, formatNumber } from '../utils/dateUtils';
 import type { DateRange, Customer } from '../utils/api';
+import { useTranslation } from '../hooks/useTranslation';
 
 interface CustomersProps {
   dateRange: DateRange;
 }
 
 const Customers: React.FC<CustomersProps> = ({ dateRange }) => {
+  const { t, dir } = useTranslation();
+  
   const { data, isLoading, error } = useQuery(
     ['customers', dateRange],
     () => fetchTopCustomers(dateRange),
@@ -16,35 +19,35 @@ const Customers: React.FC<CustomersProps> = ({ dateRange }) => {
   );
 
   if (isLoading) {
-    return <div className="text-center p-8">Loading customers data...</div>;
+    return <div className="text-center p-8">{t('common.loading')}</div>;
   }
 
   if (error) {
     return (
       <div className="bg-red-50 p-4 rounded-md text-red-800">
-        Error loading customers data. Please try again.
+        {t('common.error')}
       </div>
     );
   }
 
   return (
-    <div className="bg-white p-4 rounded-md shadow">
-      <h3 className="text-lg font-medium mb-4">Top Customers</h3>
+    <div className="bg-white p-4 rounded-md shadow" dir={dir}>
+      <h3 className="text-lg font-medium mb-4">{t('customers.title')}</h3>
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Customer
+                {t('customers.customerName')}
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Email
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Orders
+                {t('customers.orderCount')}
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Total Spent
+                {t('customers.totalSpent')}
               </th>
             </tr>
           </thead>

@@ -16,6 +16,7 @@ import Card from './Card';
 import { fetchRefunds, fetchCoupons } from '../utils/api';
 import { formatCurrency, formatNumber } from '../utils/dateUtils';
 import type { DateRange, Refund, Coupon } from '../utils/api';
+import { useTranslation } from '../hooks/useTranslation';
 
 // Register ChartJS components
 ChartJS.register(
@@ -33,6 +34,8 @@ interface AdvancedProps {
 }
 
 const Advanced: React.FC<AdvancedProps> = ({ dateRange }) => {
+  const { t, dir } = useTranslation();
+  
   // Fetch refunds data
   const { 
     data: refundsData, 
@@ -59,13 +62,13 @@ const Advanced: React.FC<AdvancedProps> = ({ dateRange }) => {
   const hasError = refundsError || couponsError;
 
   if (isLoading) {
-    return <div className="text-center p-8">Loading advanced data...</div>;
+    return <div className="text-center p-8">{t('common.loading')}</div>;
   }
 
   if (hasError) {
     return (
       <div className="bg-red-50 p-4 rounded-md text-red-800">
-        Error loading advanced data. Please try again.
+        {t('common.error')}
       </div>
     );
   }
@@ -78,7 +81,7 @@ const Advanced: React.FC<AdvancedProps> = ({ dateRange }) => {
     labels: hasRefundsToShow ? refundsData.refunds.map((refund) => refund.date) : [],
     datasets: [
       {
-        label: 'Refund Amount',
+        label: t('advanced.refundAmount'),
         data: hasRefundsToShow ? refundsData.refunds.map((refund) => refund.total) : [],
         borderColor: '#ef4444',
         backgroundColor: 'rgba(239, 68, 68, 0.1)',
@@ -96,7 +99,7 @@ const Advanced: React.FC<AdvancedProps> = ({ dateRange }) => {
       },
       title: {
         display: true,
-        text: 'Refunds Over Time',
+        text: t('advanced.refundsOverTime'),
       },
     },
     scales: {
@@ -107,19 +110,22 @@ const Advanced: React.FC<AdvancedProps> = ({ dateRange }) => {
   };
 
   return (
-    <div>
+    <div dir={dir}>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <Card
-          title="Total Refund Amount"
+          title={t('advanced.totalRefundAmount')}
           value={formatCurrency(refundsData?.total_refund_amount || 0)}
-          footer={`${refundsData?.refund_count || 0} refunds processed`}
+          footer={t('advanced.refundsProcessed', { count: refundsData?.refund_count || 0 })}
         />
         <Card
-          title="Top Used Coupon"
-          value={couponsData && couponsData.length > 0 ? couponsData[0].code : 'No coupons used'}
+          title={t('advanced.topUsedCoupon')}
+          value={couponsData && couponsData.length > 0 ? couponsData[0].code : t('advanced.noCouponsUsed')}
           footer={couponsData && couponsData.length > 0
-            ? `Used ${formatNumber(couponsData[0].usage_count)} times, discount of ${formatCurrency(couponsData[0].discount_amount)}`
-            : 'No coupon data available for this period'
+            ? t('advanced.couponUsage', {
+                count: couponsData[0].usage_count,
+                amount: formatCurrency(couponsData[0].discount_amount)
+              })
+            : t('advanced.noCouponData')
           }
         />
       </div>
@@ -134,20 +140,20 @@ const Advanced: React.FC<AdvancedProps> = ({ dateRange }) => {
 
         {/* Coupons Table */}
         <div className="bg-white p-4 rounded-md shadow">
-          <h3 className="text-lg font-medium mb-4">Coupons Used</h3>
+          <h3 className="text-lg font-medium mb-4">{t('advanced.couponsUsed')}</h3>
           {couponsData && couponsData.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Coupon Code
+                      {t('advanced.couponCode')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Usage Count
+                      {t('advanced.usageCount')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Discount Amount
+                      {t('advanced.discountAmount')}
                     </th>
                   </tr>
                 </thead>
@@ -169,7 +175,7 @@ const Advanced: React.FC<AdvancedProps> = ({ dateRange }) => {
               </table>
             </div>
           ) : (
-            <p className="text-gray-500">No coupons were used during this period.</p>
+            <p className="text-gray-500">{t('advanced.noCouponsInPeriod')}</p>
           )}
         </div>
       </div>

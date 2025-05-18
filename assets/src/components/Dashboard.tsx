@@ -18,6 +18,7 @@ import Card from './Card';
 import { fetchStats, fetchRevenueTrend, fetchTopProducts, fetchBestSalesDays } from '../utils/api';
 import { formatCurrency, formatNumber, getDateRangeLabel } from '../utils/dateUtils';
 import type { DateRange, Product, SalesDay } from '../utils/api';
+import { useTranslation } from '../hooks/useTranslation';
 
 // Register ChartJS components
 ChartJS.register(
@@ -37,6 +38,8 @@ interface DashboardProps {
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ dateRange }) => {
+  const { t, dir } = useTranslation();
+  
   // Fetch overview stats
   const { data: stats, isLoading: statsLoading, error: statsError } = useQuery(
     ['stats', dateRange],
@@ -80,7 +83,7 @@ const Dashboard: React.FC<DashboardProps> = ({ dateRange }) => {
       <div className="flex items-center justify-center p-12 bg-white rounded-lg shadow">
         <div className="text-center">
           <div className="inline-block w-8 h-8 border-4 border-t-wp-primary border-r-gray-200 border-b-gray-200 border-l-gray-200 rounded-full animate-spin mb-4"></div>
-          <p className="text-gray-600">Loading dashboard data...</p>
+          <p className="text-gray-600">{t('common.loading')}</p>
         </div>
       </div>
     );
@@ -93,8 +96,8 @@ const Dashboard: React.FC<DashboardProps> = ({ dateRange }) => {
     
     return (
       <div className="bg-red-50 p-6 rounded-lg shadow-sm border border-red-100">
-        <h3 className="text-red-800 font-medium text-lg mb-2">Unable to Load Dashboard</h3>
-        <p className="text-red-700 mb-4">There was an error loading the dashboard data. Please try again later.</p>
+        <h3 className="text-red-800 font-medium text-lg mb-2">{t('common.error')}</h3>
+        <p className="text-red-700 mb-4">{t('common.error')}</p>
         <p className="text-xs mt-2 text-red-600">
           {statsError ? `Stats error: ${statsError}` : ''}
           {trendError ? `Trend error: ${trendError}` : ''}
@@ -131,7 +134,7 @@ const Dashboard: React.FC<DashboardProps> = ({ dateRange }) => {
     labels: revenueTrend?.map((item) => item.period) || [],
     datasets: [
       {
-        label: 'Revenue',
+        label: t('dashboard.totalSales'),
         data: revenueTrend?.map((item) => item.total) || [],
         borderColor: '#2271b1',
         backgroundColor: 'rgba(34, 113, 177, 0.1)',
@@ -149,7 +152,7 @@ const Dashboard: React.FC<DashboardProps> = ({ dateRange }) => {
       },
       title: {
         display: true,
-        text: 'Revenue Trend',
+        text: t('dashboard.totalSales'),
         font: {
           size: 16,
           weight: 'bold',
@@ -158,7 +161,7 @@ const Dashboard: React.FC<DashboardProps> = ({ dateRange }) => {
       tooltip: {
         callbacks: {
           label: function(context) {
-            return `Revenue: ${formatCurrency(context.parsed.y)}`;
+            return `${t('dashboard.totalSales')}: ${formatCurrency(context.parsed.y)}`;
           }
         }
       }
@@ -168,7 +171,7 @@ const Dashboard: React.FC<DashboardProps> = ({ dateRange }) => {
         beginAtZero: true,
         title: {
           display: true,
-          text: 'Revenue',
+          text: t('dashboard.totalSales'),
         },
         ticks: {
           callback: function(value) {
@@ -182,7 +185,7 @@ const Dashboard: React.FC<DashboardProps> = ({ dateRange }) => {
       x: {
         title: {
           display: true,
-          text: 'Date',
+          text: t('dashboard.period'),
         }
       }
     },
@@ -193,38 +196,42 @@ const Dashboard: React.FC<DashboardProps> = ({ dateRange }) => {
     labels: topProducts?.map(p => p.name.length > 20 ? p.name.substring(0, 20) + '...' : p.name) || [],
     datasets: [
       {
-        label: 'Revenue',
+        label: t('products.revenue'),
         data: topProducts?.map(p => p.total) || [],
         backgroundColor: 'rgba(34, 113, 177, 0.7)',
       }
     ]
   };
-  
+
   const topProductsChartOptions: ChartOptions<'bar'> = {
     responsive: true,
-    indexAxis: 'y' as const,
     plugins: {
       legend: {
-        display: false,
+        position: 'top' as const,
       },
       title: {
         display: true,
-        text: 'Top Products by Revenue',
+        text: t('products.topProducts'),
         font: {
-          size: 14,
+          size: 16,
           weight: 'bold',
         },
       },
       tooltip: {
         callbacks: {
           label: function(context) {
-            return `Revenue: ${formatCurrency(context.parsed.x)}`;
+            return `${t('products.revenue')}: ${formatCurrency(context.parsed.y)}`;
           }
         }
       }
     },
     scales: {
-      x: {
+      y: {
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: t('products.revenue'),
+        },
         ticks: {
           callback: function(value) {
             if (typeof value === 'number') {
@@ -233,57 +240,46 @@ const Dashboard: React.FC<DashboardProps> = ({ dateRange }) => {
             return value;
           }
         }
+      },
+      x: {
+        title: {
+          display: true,
+          text: t('products.productName'),
+        }
       }
-    }
+    },
   };
 
   return (
-    <div>
-      {/* KPI cards with trend indicators */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div className="space-y-6" dir={dir}>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card
-          title="Total Sales"
+          title={t('dashboard.totalSales')}
           value={formatCurrency(totalRevenue)}
-          footer={
-            <div className="flex justify-between items-center">
-              <span>{dateRangeLabel}</span>
-              <span className={`text-xs font-medium px-2 py-1 rounded-full ${revenueChange >= 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                {revenueChange >= 0 ? '↑' : '↓'} {Math.abs(Math.round(revenueChange))}%
-              </span>
-            </div>
-          }
-          className="border-l-4 border-wp-primary"
+          change={revenueChange}
+          isLoading={isLoading}
         />
         <Card
-          title="Total Orders"
+          title={t('dashboard.totalOrders')}
           value={formatNumber(totalOrders)}
-          footer={`${formatNumber(Math.round(dailyAvgOrders * 10) / 10)} orders per day`}
-          className="border-l-4 border-yellow-500"
+          isLoading={isLoading}
         />
         <Card
-          title="Average Order Value"
+          title={t('dashboard.averageOrder')}
           value={formatCurrency(aov)}
-          footer={`Based on ${formatNumber(totalOrders)} orders`}
-          className="border-l-4 border-purple-500"
-        />
-        <Card
-          title="Daily Average Revenue"
-          value={formatCurrency(dailyAvgRevenue)}
-          footer={`Over ${daysDiff} days`}
-          className="border-l-4 border-green-500"
+          isLoading={isLoading}
         />
       </div>
 
-      {/* Main charts section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        <div className="lg:col-span-2 bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold mb-4 text-gray-700">Revenue Over Time</h3>
-          <Line options={chartOptions} data={chartData} />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white p-6 rounded-lg shadow">
+          <h3 className="text-lg font-medium mb-4">{t('dashboard.totalSales')}</h3>
+          <Line data={chartData} options={chartOptions} />
         </div>
         
         <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold mb-4 text-gray-700">Top Selling Products</h3>
-          <Bar options={topProductsChartOptions} data={topProductsChartData} />
+          <h3 className="text-lg font-medium mb-4">{t('products.topProducts')}</h3>
+          <Bar data={topProductsChartData} options={topProductsChartOptions} />
         </div>
       </div>
       

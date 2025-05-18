@@ -14,6 +14,7 @@ import {
 import { fetchTopProducts } from '../utils/api';
 import { formatCurrency, formatNumber } from '../utils/dateUtils';
 import type { DateRange, Product } from '../utils/api';
+import { useTranslation } from '../hooks/useTranslation';
 
 // Register ChartJS components
 ChartJS.register(
@@ -30,6 +31,8 @@ interface ProductsProps {
 }
 
 const Products: React.FC<ProductsProps> = ({ dateRange }) => {
+  const { t, dir } = useTranslation();
+  
   const { data, isLoading, error } = useQuery(
     ['products', dateRange],
     () => fetchTopProducts(dateRange, 10),
@@ -37,13 +40,13 @@ const Products: React.FC<ProductsProps> = ({ dateRange }) => {
   );
 
   if (isLoading) {
-    return <div className="text-center p-8">Loading products data...</div>;
+    return <div className="text-center p-8">{t('common.loading')}</div>;
   }
 
   if (error) {
     return (
       <div className="bg-red-50 p-4 rounded-md text-red-800">
-        Error loading products data. Please try again.
+        {t('common.error')}
       </div>
     );
   }
@@ -53,7 +56,7 @@ const Products: React.FC<ProductsProps> = ({ dateRange }) => {
     labels: data?.map((product) => product.name) || [],
     datasets: [
       {
-        label: 'Revenue',
+        label: t('products.revenue'),
         data: data?.map((product) => product.total) || [],
         backgroundColor: 'rgba(34, 113, 177, 0.7)',
       },
@@ -69,32 +72,32 @@ const Products: React.FC<ProductsProps> = ({ dateRange }) => {
       },
       title: {
         display: true,
-        text: 'Top Selling Products by Revenue',
+        text: t('products.topProducts'),
       },
     },
   };
 
   return (
-    <div>
+    <div dir={dir}>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white p-4 rounded-md shadow">
           <Bar options={chartOptions} data={chartData} />
         </div>
 
         <div className="bg-white p-4 rounded-md shadow">
-          <h3 className="text-lg font-medium mb-4">Top Products</h3>
+          <h3 className="text-lg font-medium mb-4">{t('products.topProducts')}</h3>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Product
+                    {t('products.productName')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Quantity Sold
+                    {t('products.totalSold')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Revenue
+                    {t('products.revenue')}
                   </th>
                 </tr>
               </thead>
