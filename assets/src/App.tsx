@@ -132,7 +132,7 @@ const App: React.FC = () => {
       <div className="mt-8 text-xs text-secondary-500 p-4 bg-white rounded-lg border border-secondary-100">
         <div className="flex items-center justify-center">
           <p className="text-center">
-            <span className="font-medium text-primary-600">WooStatsX</span> - Alex Malin <a href="https://woocommerce.com" className="text-primary-600 hover:text-primary-700 underline" target="_blank" rel="noopener noreferrer">Alex Malin</a>
+            <span className="font-medium text-primary-600">WooStatsX</span> - Alex Malin <a href="https://github.com/alexmalin23/WooStatsX" className="text-primary-600 hover:text-primary-700 underline" target="_blank" rel="noopener noreferrer">Alex Malin</a>
           </p>
         </div>
       </div>
