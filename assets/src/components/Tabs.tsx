@@ -60,26 +60,31 @@ const Tabs: React.FC<TabsProps> = ({ activeTab, onTabChange }) => {
   ] as const;
 
   return (
-    <div className="bg-white rounded-lg shadow-sm" dir={dir}>
-      <nav className="flex flex-wrap border-b border-gray-200">
+    <div className="bg-white rounded-xl shadow-card overflow-hidden" dir={dir}>
+      <nav className="flex flex-wrap border-b border-secondary-200">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => onTabChange(tab.id)}
             className={`
-              flex items-center gap-2 py-3 px-5 font-medium text-sm transition-colors
+              flex items-center gap-2 py-4 px-6 font-medium text-sm transition-all duration-200
               ${
                 activeTab === tab.id
-                ? 'border-b-2 border-wp-primary text-wp-primary bg-blue-50'
-                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                ? 'border-b-2 border-primary-600 text-primary-700 bg-primary-50'
+                : 'text-secondary-600 hover:text-secondary-900 hover:bg-secondary-50'
               }
             `}
             aria-current={activeTab === tab.id ? 'page' : undefined}
           >
-            <span className={activeTab === tab.id ? 'text-wp-primary' : 'text-gray-400'}>
+            <span className={`transition-colors duration-200 ${activeTab === tab.id ? 'text-primary-600' : 'text-secondary-400'}`}>
               {tab.icon}
             </span>
-            {tab.label}
+            <span className="relative">
+              {tab.label}
+              {activeTab === tab.id && (
+                <span className="absolute -bottom-1.5 left-0 w-full h-0.5 bg-primary-600 rounded-full"></span>
+              )}
+            </span>
           </button>
         ))}
       </nav>
@@ -87,4 +92,4 @@ const Tabs: React.FC<TabsProps> = ({ activeTab, onTabChange }) => {
   );
 };
 
-export default Tabs; 
+export default Tabs;

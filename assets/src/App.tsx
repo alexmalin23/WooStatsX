@@ -76,26 +76,26 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="woostatsx-app p-6 max-w-7xl mx-auto bg-gray-50 rounded-lg shadow-sm" dir={dir}>
+    <div className="woostatsx-app p-8 w-full bg-secondary-50 rounded-xl shadow-card" dir={dir}>
       {apiConnected === false && (
-        <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded mb-6">
+        <div className="bg-danger-50 border-l-4 border-danger-500 text-danger-700 p-5 rounded-lg mb-8">
           <div className="flex">
             <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+              <svg className="h-6 w-6 text-danger-500" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
               </svg>
             </div>
             <div className="ml-3">
-              <p className="font-medium">{t('common.error')}</p>
-              <p className="mt-1">{t('common.error')}</p>
+              <p className="font-medium text-danger-800">{t('common.error')}</p>
+              <p className="mt-1 text-danger-700">{t('common.error')}</p>
             </div>
           </div>
         </div>
       )}
       
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-        <h1 className="text-2xl font-bold text-gray-800">
-          <span className="text-wp-primary">WooStatsX</span> {t('dashboard.title')}
+        <h1 className="text-3xl font-bold text-secondary-900">
+          <span className="text-primary-600 font-extrabold">WooStatsX</span> {t('dashboard.title')}
         </h1>
         
         <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
@@ -107,9 +107,9 @@ const App: React.FC = () => {
           
           <button
             onClick={refreshData}
-            className="bg-wp-primary hover:bg-wp-secondary text-white px-4 py-2 rounded-md text-sm transition-colors flex items-center justify-center"
+            className="btn btn-primary"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
             {t('common.refresh') || 'Refresh'}
@@ -117,11 +117,11 @@ const App: React.FC = () => {
         </div>
       </div>
       
-      <div className="mb-6 bg-white rounded-lg shadow-sm">
+      <div className="mb-8">
         <Tabs activeTab={activeTab} onTabChange={handleTabChange} />
       </div>
       
-      <div className="bg-white p-6 rounded-lg shadow-sm">
+      <div className="bg-white p-8 rounded-xl shadow-card">
         {activeTab === 'overview' && <Dashboard dateRange={dateRange} />}
         {activeTab === 'products' && <Products dateRange={dateRange} />}
         {activeTab === 'customers' && <Customers dateRange={dateRange} />}
@@ -129,15 +129,15 @@ const App: React.FC = () => {
         {activeTab === 'advanced' && <Advanced dateRange={dateRange} />}
       </div>
       
-      {/* <div className="mt-6 text-xs text-gray-500 p-4 bg-gray-100 rounded-lg">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-          <p>Status: {apiConnected === null ? 'Checking API...' : apiConnected ? 'API Connected' : 'API Connection Failed'}</p>
-          <p>API: {window.wooStatsx?.apiUrl || '/wp-json/woostatsx/v1'}</p>
-          <p>Date Range: {dateRange.from} to {dateRange.to}</p>
+      <div className="mt-8 text-xs text-secondary-500 p-4 bg-white rounded-lg border border-secondary-100">
+        <div className="flex items-center justify-center">
+          <p className="text-center">
+            <span className="font-medium text-primary-600">WooStatsX</span> - {t('common.poweredBy')} <a href="https://woocommerce.com" className="text-primary-600 hover:text-primary-700 underline" target="_blank" rel="noopener noreferrer">WooCommerce</a>
+          </p>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 };
 
-export default App; 
+export default App;

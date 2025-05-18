@@ -17,7 +17,7 @@ interface LoadingSpinnerProps {
 const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   type = 'pulse',
   size = 'medium',
-  color = '#2271b1', // WordPress primary blue
+  color = '#0070c5', // Primary color from our new palette
   text,
   fullScreen = false,
   fullContainer = false,
@@ -27,19 +27,19 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   // Size mappings for different spinner types
   const sizeMap = {
     pulse: {
-      small: 5,
-      medium: 10,
-      large: 15,
+      small: 6,
+      medium: 12,
+      large: 18,
     },
     clip: {
-      small: 20,
-      medium: 35,
-      large: 50,
+      small: 24,
+      medium: 40,
+      large: 60,
     },
     bar: {
-      small: 50,
-      medium: 100,
-      large: 150,
+      small: 60,
+      medium: 120,
+      large: 180,
     },
   };
 
@@ -47,13 +47,13 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   const getSpinner = () => {
     switch (type) {
       case 'pulse':
-        return <PulseLoader color={color} size={sizeMap.pulse[size]} />;
+        return <PulseLoader color={color} size={sizeMap.pulse[size]} speedMultiplier={0.8} />;
       case 'clip':
-        return <ClipLoader color={color} size={sizeMap.clip[size]} />;
+        return <ClipLoader color={color} size={sizeMap.clip[size]} speedMultiplier={0.8} />;
       case 'bar':
-        return <BarLoader color={color} width={sizeMap.bar[size]} />;
+        return <BarLoader color={color} width={sizeMap.bar[size]} height={4} speedMultiplier={0.8} />;
       default:
-        return <PulseLoader color={color} size={sizeMap.pulse[size]} />;
+        return <PulseLoader color={color} size={sizeMap.pulse[size]} speedMultiplier={0.8} />;
     }
   };
 
@@ -62,21 +62,21 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
 
   // Container class based on props
   const containerClass = fullScreen
-    ? 'fixed inset-0 flex items-center justify-center bg-white bg-opacity-80 z-50'
+    ? 'fixed inset-0 flex items-center justify-center bg-white bg-opacity-90 backdrop-blur-sm z-50'
     : fullContainer
     ? 'flex flex-col items-center justify-center w-full h-full min-h-[200px]'
     : 'flex flex-col items-center justify-center p-6';
 
   return (
     <div className={containerClass}>
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center bg-white bg-opacity-80 p-8 rounded-xl shadow-card">
         {getSpinner()}
         {loadingText && (
-          <p className="mt-4 text-gray-600 animate-pulse">{loadingText}</p>
+          <p className="mt-4 text-secondary-700 font-medium animate-pulse-slow">{loadingText}</p>
         )}
       </div>
     </div>
   );
 };
 
-export default LoadingSpinner; 
+export default LoadingSpinner;

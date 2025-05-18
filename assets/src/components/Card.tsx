@@ -9,6 +9,8 @@ interface CardProps {
   className?: string;
   change?: number;
   isLoading?: boolean;
+  icon?: ReactNode;
+  variant?: 'default' | 'primary' | 'success' | 'warning' | 'danger';
 }
 
 const Card: React.FC<CardProps> = ({ 
@@ -17,14 +19,28 @@ const Card: React.FC<CardProps> = ({
   footer, 
   className = '',
   change,
-  isLoading = false
+  isLoading = false,
+  icon,
+  variant = 'default'
 }) => {
   const { t, dir } = useTranslation();
   
+  // Define variant-specific styles
+  const variantStyles = {
+    default: 'border-l-4 border-secondary-300',
+    primary: 'border-l-4 border-primary-500',
+    success: 'border-l-4 border-success-500',
+    warning: 'border-l-4 border-warning-500',
+    danger: 'border-l-4 border-danger-500',
+  };
+  
   if (isLoading) {
     return (
-      <div className={`bg-white rounded-lg shadow p-6 ${className}`} dir={dir}>
-        <h3 className="text-sm font-medium text-gray-500 mb-2">{title}</h3>
+      <div className={`woostatsx-card ${variantStyles[variant]} ${className}`} dir={dir}>
+        <h3 className="text-sm font-medium text-secondary-600 mb-2 flex items-center gap-2">
+          {icon && <span className="text-secondary-400">{icon}</span>}
+          {title}
+        </h3>
         <div className="h-12 flex items-center">
           <LoadingSpinner type="clip" size="small" />
         </div>
@@ -32,27 +48,30 @@ const Card: React.FC<CardProps> = ({
     );
   }
   
+  // Define change badge styles based on value
+  const changeBadgeStyles = change !== undefined && change >= 0 
+    ? 'badge badge-success' 
+    : 'badge badge-danger';
+  
   return (
-    <div className={`bg-white rounded-lg shadow p-6 transition-all hover:shadow-md ${className}`} dir={dir}>
-      <h3 className="text-sm font-medium text-gray-500 mb-1">{title}</h3>
-      <div className="text-2xl font-bold text-gray-800 mb-2">{value}</div>
+    <div className={`woostatsx-card ${variantStyles[variant]} ${className}`} dir={dir}>
+      <h3 className="text-sm font-medium text-secondary-600 mb-2 flex items-center gap-2">
+        {icon && <span className="text-secondary-400">{icon}</span>}
+        {title}
+      </h3>
+      
+      <div className="text-3xl font-bold text-secondary-900 mb-3">{value}</div>
       
       {change !== undefined && (
-        <div className="flex items-center mt-2 mb-1">
-          <span 
-            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-              change >= 0 
-                ? 'bg-green-100 text-green-800' 
-                : 'bg-red-100 text-red-800'
-            }`}
-          >
+        <div className="flex items-center mt-2 mb-2">
+          <span className={changeBadgeStyles}>
             {change >= 0 ? (
-              <svg className="mr-1.5 h-2 w-2 text-green-600" fill="currentColor" viewBox="0 0 8 8">
-                <path d="M4 0l4 4H6v4H2V4H0z" />
+              <svg className="mr-1.5 h-3 w-3 text-success-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M3.293 9.707a1 1 0 010-1.414l6-6a1 1 0 011.414 0l6 6a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L4.707 9.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
               </svg>
             ) : (
-              <svg className="mr-1.5 h-2 w-2 text-red-600" fill="currentColor" viewBox="0 0 8 8">
-                <path d="M4 8l-4-4h2V0h4v4h2z" />
+              <svg className="mr-1.5 h-3 w-3 text-danger-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M16.707 10.293a1 1 0 010 1.414l-6 6a1 1 0 01-1.414 0l-6-6a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l4.293-4.293a1 1 0 011.414 0z" clipRule="evenodd" />
               </svg>
             )}
             {Math.abs(Math.round(change))}%
@@ -61,10 +80,10 @@ const Card: React.FC<CardProps> = ({
       )}
       
       {footer && (
-        <div className="text-xs text-gray-500 mt-2">{footer}</div>
+        <div className="text-xs text-secondary-500 mt-auto pt-2">{footer}</div>
       )}
     </div>
   );
 };
 
-export default Card; 
+export default Card;

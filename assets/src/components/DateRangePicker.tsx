@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import { format, parseISO } from 'date-fns';
 import { registerLocale } from 'react-datepicker';
@@ -35,6 +35,21 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
     dateRange.to ? parseISO(dateRange.to) : null
   );
   const [isOpen, setIsOpen] = useState(false);
+  const datePickerRef = useRef<HTMLDivElement>(null);
+
+  // Close date picker when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (datePickerRef.current && !datePickerRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [datePickerRef]);
 
   const handleDateChange = (dates: [Date | null, Date | null]) => {
     const [start, end] = dates;
@@ -65,10 +80,10 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
             <button
               key={preset.value}
               onClick={() => handlePresetClick(preset.range)}
-              className={`px-3 py-2 text-sm rounded-md transition-colors ${
+              className={`btn text-sm ${
                 dateRange.from === preset.range.from && dateRange.to === preset.range.to
-                  ? 'bg-wp-primary text-white'
-                  : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                  ? 'btn-primary'
+                  : 'btn-outline'
               }`}
             >
               {preset.label}
@@ -77,14 +92,14 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
         </div>
 
         {/* Custom date picker button */}
-        <div className="relative">
+        <div className="relative" ref={datePickerRef}>
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="flex items-center gap-2 px-3 py-2 text-sm bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-wp-primary"
+            className="btn btn-outline flex items-center gap-2 text-sm"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="w-4 h-4 text-gray-500"
+              className="w-4 h-4 text-secondary-500"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -101,10 +116,19 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
                 ? `${format(startDate, 'MMM d, yyyy')} - ${format(endDate, 'MMM d, yyyy')}`
                 : t('common.custom')}
             </span>
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              className={`w-4 h-4 text-secondary-500 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
           </button>
 
           {isOpen && (
-            <div className="absolute z-10 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg">
+            <div className="absolute z-10 mt-2 bg-white border border-secondary-200 rounded-lg shadow-dropdown">
               <DatePicker
                 selected={startDate}
                 onChange={handleDateChange}
@@ -117,6 +141,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
                 showMonthDropdown
                 showYearDropdown
                 dropdownMode="select"
+                calendarClassName="bg-white"
               />
             </div>
           )}
@@ -126,4 +151,4 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
   );
 };
 
-export default DateRangePicker; 
+export default DateRangePicker;
